@@ -48,6 +48,10 @@ AB_OTA_PARTITIONS += \
     vbmeta \
     vbmeta_system \
 
+# otacert
+PRODUCT_EXTRA_RECOVERY_KEYS += \
+    $(DEVICE_PATH)/security/miui_releasekey
+
 # A/B
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
