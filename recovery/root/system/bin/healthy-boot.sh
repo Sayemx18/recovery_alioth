@@ -1,6 +1,23 @@
 #!/system/bin/sh
-
-###############################################################################
+#
+#	This file is part of the OrangeFox Recovery Project
+# 	Copyright (C) 2025 The OrangeFox Recovery Project
+#
+#	OrangeFox is free software: you can redistribute it and/or modify
+#	it under the terms of the GNU General Public License as published by
+#	the Free Software Foundation, either version 3 of the License, or
+#	any later version.
+#
+#	OrangeFox is distributed in the hope that it will be useful,
+#	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#	GNU General Public License for more details.
+#
+# 	This software is released under GPL version 3 or any later version.
+#	See <http://www.gnu.org/licenses/>.
+#
+# 	Please maintain this if you use this script or any part of it
+#
 # healthy-boot.sh
 #
 # This script is intended to be run during recovery boot to prevent a bootloop
@@ -15,7 +32,7 @@
 #
 # - Due to this version mismatch, hwservicemanager fails to parse the file,
 #   resulting in:
-#     "VINTF parse error: Unrecognized manifest.version 9.0 (libvintf@4.0)"
+#     VINTF parse error: Unrecognized manifest.version 9.0 (libvintf@4.0)"
 #   and causes the recovery to bootloop.
 #
 # - Attempting to override this file by pre-placing an identical version
@@ -27,14 +44,9 @@
 #     "Cannot add a device manifest to a framework manifest"
 #
 # Solution:
-# - This script checks for the existence of the problematic manifest fragment
-#   and deletes it if found.
+# - This script deletes the problematic manifest fragment if found.
 # - It should be called as an init service after /system is mounted and
 #   before hwservicemanager starts.
-###############################################################################
-
-TARGET_FILE="/system/etc/vintf/manifest/boot-service.qti.xml"
-
-if [ -f "$TARGET_FILE" ]; then
-    rm -f "$TARGET_FILE"
-fi
+#
+rm -f "/system/etc/vintf/manifest/boot-service.qti.xml";
+exit 0;
