@@ -60,13 +60,6 @@ service vendor.qti.vibrator /system/bin/vendor.qti.hardware.vibrator.service
     setenv LD_LIBRARY_PATH /vendor/lib64:/vendor/lib:/system/lib64:/system/lib:/sbin
     seclabel u:r:recovery:s0
 
-service healthy-boot /system/bin/healthy-boot.sh
-    user root
-    group root
-    disabled
-    oneshot
-    seclabel u:r:recovery:s0
-
 service unified-script /system/bin/unified-script.sh
     user root
     group root
@@ -83,8 +76,6 @@ on post-fs
 
 on boot
     chmod 0777 /system/bin/unified-script.sh
-    chmod 0777 /system/bin/healthy-boot.sh
-    start healthy-boot
     start unified-script
 
 on boot
