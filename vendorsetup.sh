@@ -75,6 +75,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	# vendor_boot-as-recovery
 	if [ "$FOX_VENDOR_BOOT_RECOVERY" = "1" ]; then
 		export FOX_VARIANT="vBaR"
+		export FOX_INSTALLER_VENDOR_BOOT_RAMDISK_INSTALL=1
 	fi
 else
 	if [ -z "$FOX_BUILD_DEVICE" -a -z "$BASH_SOURCE" ]; then
