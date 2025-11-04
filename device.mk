@@ -118,6 +118,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_EXTRA_RECOVERY_KEYS += \
     vendor/recovery/security/miui
 
+# skip some snapshot stuff in update_engine
+PRODUCT_PROPERTY_OVERRIDES += \
+	ro.virtual_ab.skip_snapshot_creation=true
+
 # vendor_boot
 ifeq ($(FOX_VENDOR_BOOT_RECOVERY),1)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_vendor_ramdisk.mk)
