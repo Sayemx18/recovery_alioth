@@ -143,4 +143,12 @@ PRODUCT_COPY_FILES += \
 	# $(DEVICE_PATH)/recovery/root/fstab.qcom:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/fstab.qcom
 endif
 # end: vendor_boot
+
+#--------------------------
+# to work around a (hash verification) ROM flashing error caused by crDroid+NikGapps on alioth
+# (see the edits in update_engine's payload_consumer/filesystem_verifier_action.cc -
+# ro.virtual_ab.skip_verify_source_hash=true)
+PRODUCT_PROPERTY_OVERRIDES += \
+	ro.virtual_ab.skip_verify_source_hash=true
+#--------------------------
 #
