@@ -122,28 +122,6 @@ PRODUCT_EXTRA_RECOVERY_KEYS += \
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.virtual_ab.skip_snapshot_creation=true
 
-# vendor_boot
-ifeq ($(FOX_VENDOR_BOOT_RECOVERY),1)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_vendor_ramdisk.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/generic_ramdisk.mk)
-
-# Enable project quotas and casefolding for emulated storage without sdcardfs
-$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
-
-PRODUCT_PACKAGES += \
-	linker.vendor_ramdisk \
-	e2fsck.vendor_ramdisk \
-	resize2fs.vendor_ramdisk \
-	fsck.vendor_ramdisk \
-	tune2fs.vendor_ramdisk
-
-# copy vendor_boot fstab to first_stage_ramdisk
-PRODUCT_COPY_FILES += \
-	$(DEVICE_PATH)/recovery/root/fstab-generic.qcom:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/fstab.qcom
-	# $(DEVICE_PATH)/recovery/root/fstab.qcom:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/fstab.qcom
-endif
-# end: vendor_boot
-
 #--------------------------
 # to work around a (hash verification) ROM flashing error caused by crDroid+NikGapps on alioth
 # (see the edits in update_engine's payload_consumer/filesystem_verifier_action.cc -

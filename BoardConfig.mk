@@ -62,13 +62,7 @@ VENDOR_CMDLINE := console=ttyMSM0,115200n8 androidboot.hardware=qcom androidboot
 VENDOR_CMDLINE += msm_rtb.filter=0x237 service_locator.enable=1 androidboot.usbcontroller=a600000.dwc3 swiotlb=2048 loop.max_part=7 cgroup.memory=nokmem,nosocket reboot=panic_warm
 VENDOR_CMDLINE += androidboot.init_fatal_reboot_target=recovery
 
-# header & cmdline
-ifeq ($(FOX_VENDOR_BOOT_RECOVERY),1)
-  BOARD_BOOT_HEADER_VERSION := 4
-  BOARD_MKBOOTIMG_ARGS += --vendor_cmdline "$(VENDOR_CMDLINE)"
-else
-  BOARD_KERNEL_CMDLINE := $(VENDOR_CMDLINE)
-endif
+ BOARD_KERNEL_CMDLINE := $(VENDOR_CMDLINE)
 
 # other mbootimg arguments
 BOARD_MKBOOTIMG_ARGS += --base $(BOARD_KERNEL_BASE)
@@ -82,24 +76,9 @@ BOARD_MKBOOTIMG_ARGS += --pagesize $(BOARD_KERNEL_PAGESIZE) --board ""
 
 KERNEL_PATH := $(DEVICE_PATH)/prebuilt
 
-# whether to do an inline build of the kernel sources [broken for vendor_boot targets]
-ifeq ($(FOX_BUILD_FULL_KERNEL_SOURCES),1)
-    TARGET_KERNEL_SOURCE := kernel/xiaomi/$(PRODUCT_RELEASE_NAME)
-    TARGET_KERNEL_CONFIG := vendor/$(PRODUCT_RELEASE_NAME)-fox_defconfig
-    TARGET_KERNEL_CLANG_COMPILE := true
-    KERNEL_SUPPORTS_LLVM_TOOLS := true
-    TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-gnu-
-    # clang-r383902 = 11.0.1; clang-r416183b = 12.0.5; clang-r416183b1 = 12.0.7;
-    # clang_13.0.0 (proton-clang 13.0.0, symlinked into prebuilts/clang/host/linux-x86/clang_13.0.0); clang-13+ is needed for Arrow-12.1 kernel sources
-    TARGET_KERNEL_CLANG_VERSION := 13.0.0
-    TARGET_KERNEL_CLANG_PATH := $(shell pwd)/prebuilts/clang/host/linux-x86/clang-$(TARGET_KERNEL_CLANG_VERSION)
-    TARGET_KERNEL_ADDITIONAL_FLAGS := DTC_EXT=$(shell pwd)/prebuilts/misc/$(HOST_OS)-x86/dtc/dtc
-    LLVM := 1
-    LLVM_IAS := 1
-else
-    TARGET_PREBUILT_KERNEL := $(KERNEL_PATH)/Image.gz-dtb
-#    BOARD_PREBUILT_DTBOIMAGE := $(KERNEL_PATH)/dtbo.img
-endif
+TARGET_PREBUILT_KERNEL := $(KERNEL_PATH)/Image.gz-dtb
+BOARD_PREBUILT_DTBOIMAGE := $(KERNEL_PATH)/dtbo.img
+
 
 BOARD_USES_RECOVERY_AS_BOOT := true
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
@@ -175,27 +154,3 @@ TW_SUPPORT_INPUT_AIDL_HAPTICS := true
 # Python
 TW_INCLUDE_PYTHON := true
 
-# Use vendor_boot as recovery?
-ifeq ($(FOX_VENDOR_BOOT_RECOVERY),1)
-  BOARD_USES_RECOVERY_AS_BOOT :=
-  BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE :=
-  BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
-  BOARD_USES_GENERIC_KERNEL_IMAGE := true
-  BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
-
-  # dtb stuff
-  BOARD_INCLUDE_DTB_IN_BOOTIMG := true
-  BOARD_PREBUILT_DTBOIMAGE := $(KERNEL_PATH)/dtbo.img
-  BOARD_PREBUILT_DTBIMAGE_DIR := $(KERNEL_PATH)/dtbs
-
-  # header
-  ifeq ($(BOARD_BOOT_HEADER_VERSION),4)
-      BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
-  endif
-
-  ifneq ($(FOX_VENDOR_BOOT_RECOVERY_FULL_REFLASH),1)
-      # disable the reflash menu, until all vendor_boot ROMs have a v4 header - else it won't work
-      OF_NO_REFLASH_CURRENT_ORANGEFOX := 1
-  endif
-endif
-#
