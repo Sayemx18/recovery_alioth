@@ -5,9 +5,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-# Our various search paths for Soong namespaces
-MIKONA_SOONG_PATHS := device/xiaomi/alioth #device/xiaomi/sm8250-common # device/xiaomi/mikona device/xiaomi/munch
-
 # Configure base.mk
 $(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
 
@@ -32,8 +29,7 @@ TW_FRAMERATE := 120
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
-	$(MIKONA_SOONG_PATHS) \
-	vendor/qcom/opensource/commonsys-intf/display
+    $(DEVICE_PATH)
 
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
@@ -113,10 +109,6 @@ BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 # Vibrator
 PRODUCT_PACKAGES += \
     vendor.qti.hardware.vibrator.service
-
-# OEM otacert
-PRODUCT_EXTRA_RECOVERY_KEYS += \
-    vendor/recovery/security/miui
 
 # skip some snapshot stuff in update_engine
 PRODUCT_PROPERTY_OVERRIDES += \
