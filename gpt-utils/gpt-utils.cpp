@@ -32,7 +32,6 @@
 /******************************************************************************
  * INCLUDE SECTION
  ******************************************************************************/
-#include <stdio.h>
 #include <fcntl.h>
 #include <string.h>
 #include <errno.h>
@@ -43,7 +42,6 @@
 #include <limits.h>
 #include <dirent.h>
 #include <linux/kernel.h>
-#include <asm/byteorder.h>
 #include <map>
 #include <vector>
 #include <string>
@@ -171,6 +169,7 @@ static int blk_rw(int fd, int rw, int64_t offset, uint8_t *buf, unsigned len)
             r = 0;
         }
     }
+
     return r;
 }
 
@@ -247,11 +246,11 @@ static int gpt_boot_chain_swap(const uint8_t *pentries_start,
         uint8_t *ptn_entry;
         uint8_t *ptn_bak_entry;
         uint8_t ptn_swap[PTN_ENTRY_SIZE];
-        //Skip the xbl partition on UFS devices. That is handled
+        //Skip the xbl, multiimgoem, multiimgqti partitions on UFS devices. That is handled
         //seperately.
-        if (gpt_utils_is_ufs_device() && !strncmp(ptn_swap_list[i],
-                                PTN_XBL,
-                                strlen(PTN_XBL)))
+        if ((gpt_utils_is_ufs_device() && !strncmp(ptn_swap_list[i],PTN_XBL,strlen(PTN_XBL)))
+            || !strncmp(ptn_swap_list[i],PTN_MULTIIMGOEM,strlen(PTN_MULTIIMGOEM))
+            || !strncmp(ptn_swap_list[i],PTN_MULTIIMGQTI,strlen(PTN_MULTIIMGQTI)))
             continue;
 
         ptn_entry = gpt_pentry_seek(ptn_swap_list[i], pentries_start,
@@ -978,9 +977,9 @@ int prepare_boot_update(enum boot_update_stage stage)
                         //of being loaded based on well known GUID'S.
                         //We take care of switching the UFS boot LUN
                         //explicitly later on.
-                        if (!strncmp(ptn_swap_list[i],
-                                                PTN_XBL,
-                                                strlen(PTN_XBL)))
+                        if (!strncmp(ptn_swap_list[i],PTN_XBL,strlen(PTN_XBL))
+                            || !strncmp(ptn_swap_list[i],PTN_MULTIIMGOEM,strlen(PTN_MULTIIMGOEM))
+                            || !strncmp(ptn_swap_list[i],PTN_MULTIIMGQTI,strlen(PTN_MULTIIMGQTI)))
                                 continue;
                         snprintf(buf, sizeof(buf),
                                         "%s/%sbak",
@@ -1486,7 +1485,7 @@ int gpt_disk_commit(struct gpt_disk *disk)
                 ALOGE("%s: Invalid args", __func__);
                 goto error;
         }
-        fd = open(disk->devpath, O_RDWR | O_DSYNC);
+        fd = open(disk->devpath, O_RDWR);
         if (fd < 0) {
                 ALOGE("%s: Failed to open %s: %s",
                                 __func__,
@@ -1518,7 +1517,6 @@ int gpt_disk_commit(struct gpt_disk *disk)
                                 __func__);
                 goto error;
         }
-        fsync(fd);
         close(fd);
         return 0;
 error:

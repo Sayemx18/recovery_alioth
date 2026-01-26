@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 The Lineage Open Source Project
+# Copyright (C) 2021 The TWRP Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,10 +14,18 @@
 # limitations under the License.
 #
 
-PRODUCT_MAKEFILES := \
-     $(LOCAL_DIR)/twrp_alioth.mk
+# Inherit from this product for devices that support only 64-bit apps using:
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
 
-COMMON_LUNCH_CHOICES := \
-    twrp_alioth-user \
-    twrp_alioth-userdebug \
-    twrp_alioth-eng
+# Inherit from alioth device
+$(call inherit-product, device/xiaomi/alioth/device.mk)
+
+# Inherit some common twrp stuff.
+$(call inherit-product, vendor/pb/config/common.mk)
+
+# Device identifier. This must come after all inclusions
+PRODUCT_DEVICE := alioth
+PRODUCT_NAME := pb_alioth
+PRODUCT_BRAND := POCO
+PRODUCT_MODEL := F3
+PRODUCT_MANUFACTURER := xiaomi
