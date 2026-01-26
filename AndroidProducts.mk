@@ -15,9 +15,9 @@
 #
 
 PRODUCT_MAKEFILES := \
-     $(LOCAL_DIR)/twrp_alioth.mk
+     $(LOCAL_DIR)/pb_alioth.mk
 
 COMMON_LUNCH_CHOICES := \
-    twrp_alioth-user \
-    twrp_alioth-userdebug \
-    twrp_alioth-eng
+    pb_alioth-user \
+    pb_alioth-userdebug \
+    pb_alioth-eng
