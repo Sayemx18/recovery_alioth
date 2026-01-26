@@ -1,2 +1,19 @@
-twrp recovery for alioth
-credit--->> orangefox dev
+TWRP and PBRP Tree for Poco F3 / Mi 11X / Redmi K40 (Alioth)
+
+---
+
+Credits & Acknowledgements:
+
+OrangeFox Recovery Project developers
+
+Kona community developers
+
+---
+
+Branches:
+
+twrp-12.1 → TWRP 3.7.1 
+
+pbrp-12.1 → PBRP 4.0
+
+---
